@@ -1,0 +1,390 @@
+/* 
+  Localizable.strings
+  LegitKicks
+
+  Created by Sunil Zalavadiya on 03/11/14.
+  Copyright (c) 2014 Sunil Zalavadiya. All rights reserved.
+*/
+
+
+//COMMON
+
+"camera_not_available" = "Camera feature not available with this device.";
+
+"gallery_not_available" = "Photo library does not exist on this device.";
+
+"connection_fail" = "Unable to connect, please try again!";
+
+"server_error" = "Unable to reach to the server, please try again after few minutes.";
+
+"request_time_out" = "The request timed out, please verify your internet connection and try again.";
+
+"can_not_find_host" = "The host name for a URL cannot be resolved, please try again later.";
+
+"can_not_connect_to_host" = "The host is down, please try again later";
+
+"data_length_exceeds_maximum" = "The length of resource data exceeds the maximum allowed.";
+
+"network_lost" = "The network connection was lost, please try again.";
+
+"resource_not_found" = "A requested resource cannot be retrieved.";
+
+"internet_appears_offline" = "It seems that you are not connected to the Internet. Kindly check your network settings.";
+
+"server_exception_error" = "There is problem at the server, please try again after few minutes";
+
+"wrong_request" = "Wrong request, please try again.";
+
+"server_json_error" = "JSON text did not start with array or object and option to allow fragments not set.";
+
+"location_service_enabling_alert" = "To use Legit Kicks application, you must enable Location Service from device's settings.";
+
+"internal_server_error" = "Request failed: internal server error (500). Please try again after few minutes";
+
+
+
+"error" = "Error";
+
+"yes" = "Yes";
+
+"no" = "No";
+
+"ok" = "OK";
+
+"cancel" = "Cancel";
+
+"done" = "Done";
+
+"send" = "Send";
+
+"legit_kicks" = "Legit Kicks";
+
+
+
+
+////Left Menu Page
+
+"menu" = "Menu";
+
+"my_profile" = "My Profile";
+
+"buy_trade_sell" = "Buy/Trade/Sell";
+
+"closets" = "Closets";
+
+"watchlist" = "Watchlist";
+
+"add_sneaker" = "Add Sneaker";
+
+"about" = "About";
+
+"settings" = "Settings";
+
+"sign_out" = "Sign Out";
+
+"activities" = "Activities";
+
+
+
+
+////Login Page
+
+"sign_in" = "Sign In";
+
+"forgot_password" = "Forgot Password?";
+
+//"login_failed_alert" = "Login failed, please try again.";
+"login_failed_alert" = "Invalid email address or password.";
+
+"googleSignInFailed" = "Sign in with google plus is failed, please try again.";
+
+
+
+
+////Forgot Password Page
+
+"forgot_pass_desc_text" = "Please Enter Email Address Associated with LegitKicks Account";
+
+"submit" = "Submit";
+
+"reset_password_link_sent" = "Please check your email and follow the instructions to reset your password.";
+
+"failed_to_submit_forgot_password_request_alert" = "Failed to submit forgot password request, please try again.";
+
+"user_not_available_with_given_email_alert" = "User not exist with given Email ID in our records!!";
+
+
+
+
+////Signup Page
+
+"select_photo" = "Select Photo";
+
+"take_a_photo" = "Take A Photo";
+
+"choose_existing" = "Choose Existing";
+
+"first_name" = "First Name";
+
+"last_name" = "Last Name";
+
+"user_name" = "User Name";
+
+"email_address" = "Email Address";
+
+"password" = "Password";
+
+"confirm_password" = "Confirm Password";
+
+"register" = "Register";
+
+"select_profile_picture_alert" = "Please select profile picture.";
+
+"enter_first_name_alert" = "Please enter first name.";
+
+"enter_last_name_alert" = "Please enter last name.";
+
+"enter_user_name_alert" = "Please enter user name.";
+
+"enter_email_address_alert" = "Please enter email address.";
+
+"enter_valid_email_address_alert" = "Please enter valid email address.";
+
+"enter_password_alert" = "Please enter password.";
+
+"enter_confirm_password_alert" = "Please enter confirm password.";
+
+"confirm_password_does_not_match_alert" = "Password and Confirm password does not match";
+
+"signup_failed_alert" = "Signup failed, please try again.";
+
+"email_id_already_exist_alert" = "This email already exist in our record.";
+
+"signup_successfully_done_alert" = "You have registered successfully. Now you can login.";
+
+"already_registered_alert" = "User with given email address already registered.";
+
+
+
+//// Buy/Trade/Sell Page
+
+"for_trade" = "For Trade";
+
+"for_sale" = "For Sale";
+
+"unable_load_data_alert" = "Unable to load data, please try again.";
+
+"no_more_data_available_alert" = "No more data available.";
+
+
+
+
+////My Profile Page
+
+"name" = "Name";
+
+"trades" = "Trades";
+
+"sales" = "Sales";
+
+"my_closets" = "My Closets";
+
+"rating" = "Rating";
+
+"user_information" = "User Information";
+
+"change_password" = "Change Password";
+
+"change_your_account_password" = "Change your account password.";
+
+"shipping_address" = "Shipping Address";
+
+"street_address" = "Street Address";
+
+"city" = "City";
+
+"state" = "State";
+
+"zip" = "ZIP";
+
+"payment_options" = "Payment Options";
+
+"send_receive_money_with_paypal" = "Send and receive money with PayPal.";
+
+"not_available" = "Not available";
+
+
+
+
+////Edit Profile Page
+
+"edit_profile" = "Edit Profile";
+
+"update" = "Update";
+
+"profile_update_failed_alert" = "Failed to update profile information, please try again.";
+
+"profile_update_successfully_done_alert" = "Profile information updated successfully.";
+
+
+
+////Change Password Page
+
+"old_password" = "Old Password";
+
+"new_password" = "New Password";
+
+"confirm_password" = "Confirm Password";
+
+"enter_old_password_alert" = "Please enter old password.";
+
+"enter_new_password_alert" = "Please enter new password.";
+
+"password_changed_successfully_alert" = "Password changed successfully.";
+
+"failed_to_change_password_alert" = "Failed to change password, please try again.";
+
+"old_password_is_wrong_alert" = "Old password is wrong. Please enter correct old password.";
+
+
+
+////Add/Edit Paypal Info Page
+
+"payapl" = "PayPal";
+
+"paypal_id" = "PayPal ID";
+
+"confirm_paypal_id" = "Confirm PayPal ID";
+
+"enter_paypal_id_alert" = "Please enter PayPal ID.";
+
+"enter_valid_paypal_id_alert" = "Please enter valid PayPal ID.";
+
+"enter_confirm_paypal_id_alert" = "Please enter confirm PayPal ID.";
+
+"confirm_paypal_id_does_not_match_alert" = "PayPal ID and Confirm PayPal ID does not match";
+
+"paypal_update_failed_alert" = "Failed to update PayPal ID, please try again.";
+
+"paypal_update_successfully_done_alert" = "PayPal ID updated successfully.";
+
+
+
+////Profile Page
+
+"profile" = "Profile";
+
+"flag_this_user" = "Flag This User";
+
+
+
+////Flag User Page
+
+"flag_user" = "Flag User";
+
+"enter_flag_reason_alert" = "Please enter reason to flag user.";
+
+"your_request_submitted_successfully_alert" = "Your request submitted successfully.";
+
+"failed_to_submit_your_request_alert" = "Failed to submit your request. Please try again.";
+
+
+
+////Add Sneaker
+
+"select_atleast_one_sneaker_image_alert" = "Please select atleast one sneaker image.";
+
+"select_brand_name_alert" = "Please select brand.";
+
+"enter_model_name_alert" = "Please enter model.";
+
+"select_condition_alert" = "Please select condition.";
+
+"select_size_alert" = "Please select size.";
+
+"enter_value_alert" = "Please enter value.";
+
+"enter_description_alert" = "Please enter description.";
+
+"sneaker_added_successfully_alert" = "New sneaker added successfully.";
+
+"sneaker_does_not_added_successfully_alert" = "Failed to add new sneaker, please try again.";
+
+
+
+////Search Page
+
+"filter" = "Filter";
+
+"search" = "Search";
+
+"filters" = "Filters";
+
+"brand" = "Brand";
+
+"size" = "Size";
+
+"condition" = "Condition";
+
+"price" = "Price";
+
+"sort_by" = "Soret by";
+
+"apply" = "Apply";
+
+
+
+////Sneaker detail page
+
+"sneaker_removed_from_watchlist_alert" = "Sneaker removed from you watchlist.";
+
+"sneaker_added_to_watchlist_alert" = "Sneaker added to your watchlist.";
+
+"unable_to_remove_sneaker_from_watchlist_alert" = "Failed to remove this sneaker from your watchlist, please try again.";
+
+"unable_to_add_sneaker_to_watchlist_alert" = "Failed to add this sneaker to your watchlist, please try again.";
+
+
+
+////Closets Page
+
+"random" = "Random";
+
+"recent" = "Recent";
+
+"popular" = "Popular";
+
+"following" = "Following";
+
+"closet_followed_successfully_alert" = "You have followed this closet successfully.";
+
+"closet_unfollowed_successfully_alert" = "You have unfollowed this closet successfully.";
+
+"failed_to_follow_closet_alert" = "Failed to follow this closet, please try again.";
+
+"failed_to_unfollow_closet_alert" = "Failed to unfollow this closet, please try again.";
+
+
+
+////My Closets Page
+
+"failed_to_update_closet_banner_alert" = "Failed to update closet banner picture, please try again.";
+
+"failed_to_update_closet_profile_alert" = "Failed to update closet profile picture, please try again.";
+
+
+
+////User Sneaker List For Trade Page
+
+"trade" = "Trade";
+
+
+
+////Activity Page
+
+"sell" = "Sell";
+
+"buy" = "Buy";
+
+"questions" = "Questions";
+

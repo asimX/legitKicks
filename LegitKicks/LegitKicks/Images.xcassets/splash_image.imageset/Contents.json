@@ -1,0 +1,61 @@
+{
+  "images" : [
+    {
+      "resizing" : {
+        "mode" : "3-part-vertical",
+        "center" : {
+          "mode" : "stretch",
+          "height" : 1
+        },
+        "capInsets" : {
+          "top" : 329,
+          "bottom" : 150
+        }
+      },
+      "idiom" : "iphone",
+      "filename" : "Default.png",
+      "scale" : "1x"
+    },
+    {
+      "resizing" : {
+        "mode" : "3-part-vertical",
+        "center" : {
+          "mode" : "stretch",
+          "height" : 1
+        },
+        "capInsets" : {
+          "top" : 676,
+          "bottom" : 283
+        }
+      },
+      "idiom" : "iphone",
+      "filename" : "Default@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "resizing" : {
+        "mode" : "3-part-vertical",
+        "center" : {
+          "mode" : "stretch",
+          "height" : 1
+        },
+        "capInsets" : {
+          "top" : 790,
+          "bottom" : 345
+        }
+      },
+      "idiom" : "iphone",
+      "filename" : "Default-568h@2x.png",
+      "subtype" : "retina4",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "iphone",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_image" translatesAutoresizingMaskIntoConstraints="NO" id="rjU-Do-iwa">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="rjU-Do-iwa" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Hm0-56-gCr"/>
+                <constraint firstAttribute="bottom" secondItem="rjU-Do-iwa" secondAttribute="bottom" id="a7E-lq-zzE"/>
+                <constraint firstItem="rjU-Do-iwa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="cWd-yg-s3J"/>
+                <constraint firstAttribute="trailing" secondItem="rjU-Do-iwa" secondAttribute="trailing" id="rjS-U7-w53"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="rjU-Do-iwa"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="Hm0-56-gCr"/>
+                    <exclude reference="a7E-lq-zzE"/>
+                    <exclude reference="cWd-yg-s3J"/>
+                    <exclude reference="rjS-U7-w53"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=compact">
+                <mask key="subviews">
+                    <include reference="rjU-Do-iwa"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="Hm0-56-gCr"/>
+                    <include reference="a7E-lq-zzE"/>
+                    <include reference="cWd-yg-s3J"/>
+                    <include reference="rjS-U7-w53"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="548" y="455"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="splash_image" width="320" height="480"/>
+    </resources>
+</document>

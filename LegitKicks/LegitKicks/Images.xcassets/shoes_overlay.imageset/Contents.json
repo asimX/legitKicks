@@ -1,0 +1,44 @@
+{
+  "images" : [
+    {
+      "resizing" : {
+        "mode" : "3-part-horizontal",
+        "center" : {
+          "mode" : "stretch",
+          "width" : 21
+        },
+        "capInsets" : {
+          "right" : 109,
+          "left" : 8
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "overlay.png",
+      "scale" : "1x"
+    },
+    {
+      "resizing" : {
+        "mode" : "3-part-horizontal",
+        "center" : {
+          "mode" : "stretch",
+          "width" : 42
+        },
+        "capInsets" : {
+          "right" : 218,
+          "left" : 16
+        }
+      },
+      "idiom" : "universal",
+      "filename" : "overlay@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}
