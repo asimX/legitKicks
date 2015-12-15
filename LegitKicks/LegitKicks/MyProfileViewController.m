@@ -84,6 +84,8 @@
     closetsBtn.layer.cornerRadius = closetsBtn.frame.size.height/2.0;
     closetsBtn.layer.borderWidth = 1.0;
     closetsBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+    
+    logoutBtn.layer.cornerRadius = 4.0;
 }
 
 -(void)viewWillLayoutSubviews
@@ -142,6 +144,11 @@
 -(void)editButtonPressed
 {
     [self performSegueWithIdentifier:@"MyProfileVcToEditProfileVc" sender:nil];
+}
+
+-(IBAction)logoutBtnClicked:(id)sender
+{
+    [[AppDelegate sharedAppDelegate] logoutFromApplication];
 }
 
 

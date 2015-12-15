@@ -10,14 +10,7 @@
 
 @interface ClosetsViewController : UIViewController
 {
-    IBOutlet UISegmentedControl *closetTypeSegmentControl;
-    IBOutlet UITableView *closetTableview;
     
-    NSMutableArray *closetArray;
-    NSMutableArray *randomClosetArray;
-    NSMutableArray *recentClosetArray;
-    NSMutableArray *popularClosetArray;
-    NSMutableArray *followingClosetArray;
 }
 
 @end

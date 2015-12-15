@@ -12,7 +12,8 @@
 
 @interface AddSneakerPhotoViewController ()
 {
-    
+    CGFloat cellWidth;
+    CGFloat cellHeight;
 }
 
 @end
@@ -33,10 +34,14 @@
     
     [self setBackButtonToNavigationBar];
     
+    cellWidth = [UIScreen mainScreen].bounds.size.width/2.0;
+    cellHeight = cellWidth;
+    
+    
     if(self.selectedImageArray==nil)
         self.selectedImageArray = [[NSMutableArray alloc] init];
     
-    [imageTableView reloadData];
+    [imageCollectionView reloadData];
 }
 
 #pragma mark Set custom Back button to Navigationbar
@@ -171,24 +176,29 @@
         
         imageToUse = [imageToUse imageScaledToFitSize:CGSizeMake(600, 400)];
         [self.selectedImageArray addObject:imageToUse];
-        [imageTableView reloadData];
+        [imageCollectionView reloadData];
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
+#pragma mark - CollectionView Datasource/Delegate Methods
 
-#pragma mark Tableview delegate/datasource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(cellWidth, cellHeight);
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return [self.selectedImageArray count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    AddSneakerPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"sneakerImageCell"];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    AddSneakerPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"sneakerImageCell" forIndexPath:indexPath];
     cell.trashBtn.tag = indexPath.row;
     
     if([[self.selectedImageArray objectAtIndex:indexPath.row] isKindOfClass:[UIImage class]])
@@ -204,7 +214,7 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
 }
@@ -214,7 +224,7 @@
     NSInteger index = [sender tag];
     
     [self.selectedImageArray removeObjectAtIndex:index];
-    [imageTableView reloadData];
+    [imageCollectionView reloadData];
 }
 
 

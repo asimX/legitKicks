@@ -42,7 +42,7 @@
     [menuArray addObject:dict];
     
     
-    dict = @{@"menu_name" : NSLocalizedString(@"legit_kicks", nil),
+    dict = @{@"menu_name" : NSLocalizedString(@"favorites", nil),
              @"menu_image" : @"ic_watchlist",
              @"menu_image_selected" : @"ic_watchlist"};
     [menuArray addObject:dict];
@@ -78,10 +78,10 @@
     [menuArray addObject:dict];
     
     
-    dict = @{@"menu_name" : NSLocalizedString(@"sign_out", nil),
+    /*dict = @{@"menu_name" : NSLocalizedString(@"sign_out", nil),
              @"menu_image" : @"ic_signout",
              @"menu_image_selected" : @"ic_signout"};
-    [menuArray addObject:dict];
+    [menuArray addObject:dict];*/
     
     
     /*dict = @{@"menu_name" : @"Public Profile",

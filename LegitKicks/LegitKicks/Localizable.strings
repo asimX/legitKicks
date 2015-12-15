@@ -84,6 +84,8 @@
 
 "activities" = "Activities";
 
+"favorites" = "Favorites";
+
 
 
 
@@ -303,6 +305,8 @@
 "select_size_alert" = "Please select size.";
 
 "enter_value_alert" = "Please enter value.";
+
+"select_gender_alert" = "Please select gender.";
 
 "enter_description_alert" = "Please enter description.";
 

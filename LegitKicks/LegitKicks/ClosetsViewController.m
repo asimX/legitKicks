@@ -10,31 +10,17 @@
 #import "MFSideMenu.h"
 //#import "UIImageView+AFNetworking.h"
 #import "ClosetDetailViewController.h"
-#import "UIImageView+WebCache.h"
 
-@interface ClosetsViewController ()
+#import "MXSegmentedPager.h"
+#import "ClosetsListingViewController.h"
+
+@interface ClosetsViewController () <MXSegmentedPagerDelegate, MXSegmentedPagerDataSource, ClosetsListingVcDelegate>
 {
-    BOOL loadNextRandomClosetsList;
-    BOOL loadNextRecentClosetsList;
-    BOOL loadNextPopularClosetsList;
-    BOOL loadNextFollowingClosetsList;
-    
-    
-    NSInteger totalRandomClosetsPageCount;
-    NSInteger totalRecentClosetsPageCount;
-    NSInteger totalPopularClosetsPageCount;
-    NSInteger totalFollowingClosetsPageCount;
-    
-    NSInteger randomClosetsOffset;
-    NSInteger recentClosetsOffset;
-    NSInteger popularClosetsOffset;
-    NSInteger followingClosetsOffset;
-    NSInteger dataLimit;
-    
-    BOOL isLoadingData;
-    
-    NSInteger randomClosetApiCount;
+    ClosetsListingViewController *randomClosetsVc;
+    ClosetsListingViewController *popularClosetsVc;
+    ClosetsListingViewController *followingClosetsVc;
 }
+@property (nonatomic, strong) MXSegmentedPager  * segmentedPager;
 
 @end
 
@@ -46,33 +32,11 @@
     
     self.title = NSLocalizedString(@"closets", nil);
     
-    [closetTypeSegmentControl setTitle:NSLocalizedString(@"recent", nil) forSegmentAtIndex:0];
-    [closetTypeSegmentControl setTitle:NSLocalizedString(@"popular", nil) forSegmentAtIndex:1];
-    [closetTypeSegmentControl setTitle:NSLocalizedString(@"following", nil) forSegmentAtIndex:2];
-    [closetTypeSegmentControl setTitle:NSLocalizedString(@"random", nil) forSegmentAtIndex:3];
-    
     self.navigationController.navigationBarHidden = NO;
     
-    
-    loadNextRandomClosetsList = YES;
-    loadNextRecentClosetsList = YES;
-    loadNextPopularClosetsList = YES;
-    loadNextFollowingClosetsList = YES;
-    
-    randomClosetsOffset = 0;
-    recentClosetsOffset = 0;
-    popularClosetsOffset = 0;
-    followingClosetsOffset = 0;
-    randomClosetApiCount = 0;
-    
-    dataLimit = 20;
-    
-    [randomClosetArray removeAllObjects];
-    [recentClosetArray removeAllObjects];
-    [popularClosetArray removeAllObjects];
-    [followingClosetArray removeAllObjects];
-    
-    [self closetTypeSegmentControlValueChanged:nil];
+    [randomClosetsVc loadViewFromStart];
+    [popularClosetsVc loadViewFromStart];
+    [followingClosetsVc loadViewFromStart];
     
 }
 
@@ -80,13 +44,28 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    randomClosetsVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ClosetsListingVc"];
+    randomClosetsVc.delegate = self;
+    randomClosetsVc.isRandomClosets = YES;
+    
+    popularClosetsVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ClosetsListingVc"];
+    popularClosetsVc.delegate = self;
+    popularClosetsVc.isPopularClosets = YES;
+    
+    followingClosetsVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ClosetsListingVc"];
+    followingClosetsVc.delegate = self;
+    followingClosetsVc.isFollowingClosets = YES;
+    
+    
     [self setMenuButtonToNavigationBar];
     [self setMyClosetButtonToNavigationBar];
     
-    randomClosetArray = [[NSMutableArray alloc] init];
-    recentClosetArray = [[NSMutableArray alloc] init];
-    popularClosetArray = [[NSMutableArray alloc] init];
-    followingClosetArray = [[NSMutableArray alloc] init];
+    [self.view addSubview:self.segmentedPager];
+    
+    self.segmentedPager.segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    self.segmentedPager.segmentedControl.selectionIndicatorColor = [UIColor colorWithRed:210.0/255.0 green:70.0/255.0 blue:73.0/255.0 alpha:1.0];
+    self.segmentedPager.segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
+    self.segmentedPager.segmentedControl.selectedTitleTextAttributes = @{NSForegroundColorAttributeName : [UIColor darkGrayColor]};
 }
 
 
@@ -146,488 +125,85 @@
 }
 
 
-
--(IBAction)closetTypeSegmentControlValueChanged:(id)sender
-{
-    if(closetTypeSegmentControl.selectedSegmentIndex == 3)
-    {
-        randomClosetsOffset = 0;
-        
-        //[randomClosetArray removeAllObjects];
-        
-        closetArray = [[NSMutableArray alloc] initWithArray:randomClosetArray];
-        
-        [closetTableview setContentOffset:CGPointMake(0, 0)];
-        
-        [closetTableview reloadData];
-        
-        //if([closetArray count]==0)
-        {
-            [self loadRandomClosetsListFromWebserver];
-        }
-    }
-    else if(closetTypeSegmentControl.selectedSegmentIndex == 0)
-    {
-        closetArray = [[NSMutableArray alloc] initWithArray:recentClosetArray];
-        
-        [closetTableview setContentOffset:CGPointMake(0, 0)];
-        
-        [closetTableview reloadData];
-        
-        if([closetArray count]==0)
-        {
-            [self loadRecentClosetsListFromWebserver];
-        }
-    }
-    else if(closetTypeSegmentControl.selectedSegmentIndex == 1)
-    {
-        closetArray = [[NSMutableArray alloc] initWithArray:popularClosetArray];
-        
-        [closetTableview setContentOffset:CGPointMake(0, 0)];
-        
-        [closetTableview reloadData];
-        
-        if([closetArray count]==0)
-        {
-            [self loadPopularClosetsListFromWebserver];
-        }
-    }
-    else if(closetTypeSegmentControl.selectedSegmentIndex == 2)
-    {
-        closetArray = [[NSMutableArray alloc] initWithArray:followingClosetArray];
-        
-        [closetTableview setContentOffset:CGPointMake(0, 0)];
-        
-        [closetTableview reloadData];
-        
-        if([closetArray count]==0)
-        {
-            [self loadFollowingClosetsListFromWebserver];
-        }
-    }
+- (void)viewWillLayoutSubviews {
+    self.segmentedPager.frame = (CGRect){
+        .origin.x       = 0.f,
+        .origin.y       = 0.f,
+        .size.width     = self.view.frame.size.width,
+        .size.height    = self.view.frame.size.height
+    };
+    [super viewWillLayoutSubviews];
 }
 
+#pragma -mark Properties
 
--(void)loadRandomClosetsListFromWebserver
+- (MXSegmentedPager *)segmentedPager {
+    if (!_segmentedPager) {
+        
+        // Set a segmented pager
+        _segmentedPager = [[MXSegmentedPager alloc] init];
+        _segmentedPager.delegate    = self;
+        _segmentedPager.dataSource  = self;
+    }
+    return _segmentedPager;
+}
+
+#pragma -mark <MXSegmentedPagerDelegate>
+
+- (void)segmentedPager:(MXSegmentedPager *)segmentedPager didSelectViewWithTitle:(NSString *)title
 {
-    if(isLoadingData /*|| !loadNextRandomClosetsList*/)
-        return;
+    NSLog(@"%@ page selected.", title);
+}
+
+- (CGFloat) heightForSegmentedControlInSegmentedPager:(MXSegmentedPager*)segmentedPager
+{
+    return 40.0;
+}
+
+#pragma -mark <MXSegmentedPagerDataSource>
+
+- (NSInteger)numberOfPagesInSegmentedPager:(MXSegmentedPager *)segmentedPager
+{
+    return 3;
+}
+
+- (NSString *)segmentedPager:(MXSegmentedPager *)segmentedPager titleForSectionAtIndex:(NSInteger)index
+{
     
-    if([[AFNetworkReachabilityManager sharedManager] isReachable])
+    if(index==0)
     {
-        isLoadingData = YES;
-        
-        NSDictionary *params = @{@"method" : @"RandomCloset",
-                                 @"userid" : [LKKeyChain objectForKey:@"userid"],
-                                 @"Page" : @(randomClosetsOffset)};
-        LKLog(@"params = %@",params);
-        
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&error];
-        
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        
-        MBProgressHUD *loading = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:loading];
-        [loading show:YES];
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        
-        [manager.operationQueue cancelAllOperations];
-        
-        [manager POST:BASE_API parameters:@{@"data" : jsonString} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            LKLog(@"JSON: %@", responseObject);
-            
-            [loading hide:YES];
-            
-            if([responseObject[@"success"] integerValue] == 1)
-            {
-                [randomClosetArray removeAllObjects];
-                [randomClosetArray addObjectsFromArray:responseObject[@"alldata"]];
-                
-                closetArray = [[NSMutableArray alloc] initWithArray:randomClosetArray];
-                
-                [closetTableview reloadData];
-                
-                randomClosetsOffset = randomClosetsOffset + 1;
-                
-                totalRandomClosetsPageCount = [responseObject[@"totalpage"] integerValue];
-                
-                
-                if([responseObject[@"alldata"] count]==0 || randomClosetsOffset >= totalRandomClosetsPageCount)
-                {
-                    if(randomClosetApiCount<4)
-                    {
-                        randomClosetApiCount = randomClosetApiCount + 1;
-                        [self loadRandomClosetsListFromWebserver];
-                    }
-                    
-                    loadNextRandomClosetsList = NO;
-                }
-                else
-                {
-                    randomClosetApiCount = 0;
-                    loadNextRandomClosetsList = YES;
-                }
-            }
-            else
-            {
-                [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"unable_load_data_alert", nil)];
-            }
-            
-            isLoadingData = NO;
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [loading hide:YES];
-            
-            LKLog(@"failed response string = %@",operation.responseString);
-            [Utility displayHttpFailureError:error];
-            
-            isLoadingData = NO;
-        }];
+        return NSLocalizedString(@"random", nil);
+    }
+    else if(index==1)
+    {
+        return NSLocalizedString(@"popular", nil);
     }
     else
     {
-        [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"internet_appears_offline", nil)];
+        return NSLocalizedString(@"following", nil);
     }
+    
 }
 
-
--(void)loadRecentClosetsListFromWebserver
+- (UIView *)segmentedPager:(MXSegmentedPager *)segmentedPager viewForPageAtIndex:(NSInteger)index
 {
-    if(isLoadingData || !loadNextRecentClosetsList)
-        return;
-    
-    if([[AFNetworkReachabilityManager sharedManager] isReachable])
+    if(index==0)
     {
-        isLoadingData = YES;
-        
-        NSDictionary *params = @{@"method" : @"RecentUpdateCloset",
-                                 @"userid" : [LKKeyChain objectForKey:@"userid"],
-                                 @"Page" : @(recentClosetsOffset)};
-        LKLog(@"params = %@",params);
-        
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&error];
-        
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        
-        MBProgressHUD *loading = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:loading];
-        [loading show:YES];
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        
-        [manager.operationQueue cancelAllOperations];
-        
-        [manager POST:BASE_API parameters:@{@"data" : jsonString} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            LKLog(@"JSON: %@", responseObject);
-            
-            [loading hide:YES];
-            
-            if([responseObject[@"success"] integerValue] == 1)
-            {
-                [recentClosetArray addObjectsFromArray:responseObject[@"alldata"]];
-                
-                closetArray = [[NSMutableArray alloc] initWithArray:recentClosetArray];
-                
-                [closetTableview reloadData];
-                
-                recentClosetsOffset = recentClosetsOffset + 1;
-                
-                totalRecentClosetsPageCount = [responseObject[@"totalpage"] integerValue];
-                
-                
-                if([responseObject[@"alldata"] count]==0 || recentClosetsOffset >= totalRecentClosetsPageCount)
-                {
-                    loadNextRecentClosetsList = NO;
-                }
-                else
-                {
-                    loadNextRecentClosetsList = YES;
-                }
-            }
-            else
-            {
-                [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"unable_load_data_alert", nil)];
-            }
-            
-            isLoadingData = NO;
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [loading hide:YES];
-            
-            LKLog(@"failed response string = %@",operation.responseString);
-            [Utility displayHttpFailureError:error];
-            
-            isLoadingData = NO;
-        }];
+        return randomClosetsVc.view;
+    }
+    else if(index==1)
+    {
+        return popularClosetsVc.view;
     }
     else
     {
-        [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"internet_appears_offline", nil)];
+        return followingClosetsVc.view;
     }
 }
 
--(void)loadPopularClosetsListFromWebserver
+-(void)closetSelectedWithDict:(NSDictionary *)dict viewController:(ClosetsListingViewController *)viewController
 {
-    if(isLoadingData || !loadNextPopularClosetsList)
-        return;
-    
-    if([[AFNetworkReachabilityManager sharedManager] isReachable])
-    {
-        isLoadingData = YES;
-        
-        NSDictionary *params = @{@"method" : @"MostPopularCloset",
-                                 @"userid" : [LKKeyChain objectForKey:@"userid"],
-                                 @"Page" : @(popularClosetsOffset)};
-        LKLog(@"params = %@",params);
-        
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&error];
-        
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        
-        MBProgressHUD *loading = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:loading];
-        [loading show:YES];
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        
-        [manager.operationQueue cancelAllOperations];
-        
-        [manager POST:BASE_API parameters:@{@"data" : jsonString} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            LKLog(@"JSON: %@", responseObject);
-            
-            [loading hide:YES];
-            
-            if([responseObject[@"success"] integerValue] == 1)
-            {
-                [popularClosetArray addObjectsFromArray:responseObject[@"alldata"]];
-                
-                closetArray = [[NSMutableArray alloc] initWithArray:popularClosetArray];
-                
-                [closetTableview reloadData];
-                
-                popularClosetsOffset = popularClosetsOffset + 1;
-                
-                totalPopularClosetsPageCount = [responseObject[@"totalpage"] integerValue];
-                
-                
-                if([responseObject[@"alldata"] count]==0 || popularClosetsOffset >= totalPopularClosetsPageCount)
-                {
-                    loadNextPopularClosetsList = NO;
-                }
-                else
-                {
-                    loadNextPopularClosetsList = YES;
-                }
-            }
-            else
-            {
-                [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"unable_load_data_alert", nil)];
-            }
-            
-            isLoadingData = NO;
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [loading hide:YES];
-            
-            LKLog(@"failed response string = %@",operation.responseString);
-            [Utility displayHttpFailureError:error];
-            
-            isLoadingData = NO;
-        }];
-    }
-    else
-    {
-        [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"internet_appears_offline", nil)];
-    }
-}
-
-
--(void)loadFollowingClosetsListFromWebserver
-{
-    if(isLoadingData || !loadNextFollowingClosetsList)
-        return;
-    
-    if([[AFNetworkReachabilityManager sharedManager] isReachable])
-    {
-        isLoadingData = YES;
-        
-        NSDictionary *params = @{@"method" : @"FollowingClosetList",
-                                 @"userid" : [LKKeyChain objectForKey:@"userid"],
-                                 @"Page" : @(followingClosetsOffset)};
-        LKLog(@"params = %@",params);
-        
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&error];
-        
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        
-        MBProgressHUD *loading = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:loading];
-        [loading show:YES];
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        
-        [manager.operationQueue cancelAllOperations];
-        
-        [manager POST:BASE_API parameters:@{@"data" : jsonString} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            LKLog(@"JSON: %@", responseObject);
-            
-            [loading hide:YES];
-            
-            if([responseObject[@"success"] integerValue] == 1)
-            {
-                [followingClosetArray addObjectsFromArray:responseObject[@"alldata"]];
-                
-                closetArray = [[NSMutableArray alloc] initWithArray:followingClosetArray];
-                
-                [closetTableview reloadData];
-                
-                followingClosetsOffset = followingClosetsOffset + 1;
-                
-                totalFollowingClosetsPageCount = [responseObject[@"totalpage"] integerValue];
-                
-                
-                if([responseObject[@"alldata"] count]==0 || followingClosetsOffset >= totalFollowingClosetsPageCount)
-                {
-                    loadNextFollowingClosetsList = NO;
-                }
-                else
-                {
-                    loadNextFollowingClosetsList = YES;
-                }
-            }
-            else
-            {
-                [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"unable_load_data_alert", nil)];
-            }
-            
-            isLoadingData = NO;
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [loading hide:YES];
-            
-            LKLog(@"failed response string = %@",operation.responseString);
-            [Utility displayHttpFailureError:error];
-            
-            isLoadingData = NO;
-        }];
-    }
-    else
-    {
-        [Utility displayAlertWithTitle:NSLocalizedString(@"error", nil) andMessage:NSLocalizedString(@"internet_appears_offline", nil)];
-    }
-}
-
-
-
-#pragma mark Tableview delegate/datasource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [closetArray count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"closetCell"];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.accessoryType = UITableViewCellAccessoryNone;
-    
-    UIImageView *profileImageView = (UIImageView *)[cell.contentView viewWithTag:10];
-    UILabel *closetNameLbl = (UILabel *)[cell.contentView viewWithTag:11];
-    UILabel *usernameLbl = (UILabel *)[cell.contentView viewWithTag:12];
-    UIImageView *heartImageView = (UIImageView *)[cell.contentView viewWithTag:13];
-    UILabel *followingCountLbl = (UILabel *)[cell.contentView viewWithTag:14];
-    
-    
-    profileImageView.layer.cornerRadius = profileImageView.frame.size.width/2.0;
-    profileImageView.layer.masksToBounds = YES;
-    profileImageView.image = nil;
-    
-    NSDictionary *dict = [closetArray objectAtIndex:indexPath.row];
-    
-    
-    __block UIImageView *blockThumbImage = profileImageView;
-    
-    /*[profileImageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:dict[@"closetprofileimage"]]] placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
-     {
-         blockThumbImage.image = image;
-         
-     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-         
-     }];*/
-    
-    [profileImageView sd_setImageWithURL:[NSURL URLWithString:dict[@"closetprofileimage"]] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        blockThumbImage.image = image;
-    }];
-    
-    
-    closetNameLbl.text = dict[@"closetname"];
-    usernameLbl.text = dict[@"username"];
-    followingCountLbl.text = [NSString stringWithFormat:@"%@", dict[@"followers"]];
-    
-    if([dict[@"isfollow"] integerValue]==1 || closetTypeSegmentControl.selectedSegmentIndex==2)
-    {
-        heartImageView.highlighted = YES;
-    }
-    else
-    {
-        heartImageView.highlighted = NO;
-    }
-    
-    
-    if(!isLoadingData && indexPath.row==[closetArray count]-1)
-    {
-        /*if(forSaleTabBtn.selected && loadNextSneakerForSaleData)
-        {
-            [self loadSneakerForSaleDataFromWebserver];
-        }
-        else if(forTradeTabBtn.selected && loadNextSneakerForTradeData)
-        {
-            [self loadSneakerForTradeDataFromWebserver];
-        }*/
-        
-        if(closetTypeSegmentControl.selectedSegmentIndex == 3)
-        {
-            
-        }
-        else if(closetTypeSegmentControl.selectedSegmentIndex == 0)
-        {
-            
-            [self loadRecentClosetsListFromWebserver];
-        }
-        else if(closetTypeSegmentControl.selectedSegmentIndex == 1)
-        {
-            [self loadPopularClosetsListFromWebserver];
-        }
-        else if(closetTypeSegmentControl.selectedSegmentIndex == 2)
-        {
-            [self loadFollowingClosetsListFromWebserver];
-        }
-    }
-    
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    id closetId = [closetArray objectAtIndex:indexPath.row][@"closetid"];
+    id closetId = dict[@"closetid"];
     [self performSegueWithIdentifier:@"ClosetsVcToClosetDetailVc" sender:closetId];
 }
 

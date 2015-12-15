@@ -27,6 +27,8 @@
     
     IBOutlet UITableView *userInfoTable;
     IBOutlet NSLayoutConstraint *userInfoTableHeightConstraint;
+    
+    IBOutlet UIButton *logoutBtn;
 }
 
 @end

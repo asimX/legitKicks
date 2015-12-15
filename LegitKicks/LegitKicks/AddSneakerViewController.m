@@ -9,11 +9,12 @@
 #import "AddSneakerViewController.h"
 #import "AddSneakerPhotoViewController.h"
 #import "MFSideMenu.h"
+#import "AddDescriptionViewController.h"
 
 #define WRITE_DESC_TEXT     @"Write description..."
 
 
-@interface AddSneakerViewController ()
+@interface AddSneakerViewController () <AddDescVcDelegate>
 {
     UIToolbar *keyboardToolbar;
     UITextField *lastTextfield;
@@ -25,12 +26,15 @@
     NSArray *brandArray;
     NSArray *conditionArray;
     NSArray *sizeArray;
+    NSArray *genderArray;
     
     NSInteger selectedBrandIndex;
     
     NSArray *sneakerImageArray;
     
     NSInteger selectedCondtionIndex;
+    
+    NSInteger selectedGenderIndex;
 }
 
 @end
@@ -68,6 +72,8 @@
         [self setBackButtonToNavigationBar];
     }
     
+    [self setAddPhotoButtonToNavigationBar];
+    
     tempImage = [[UIImageView alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -82,12 +88,24 @@
     
     sizeArray = @[@"1", @"1.5", @"2", @"2.5", @"3", @"3.5", @"4", @"4.5", @"5", @"5.5", @"6", @"6.5", @"7", @"7.5", @"8", @"8.5", @"9", @"9.5", @"10", @"10.5", @"11", @"11.5", @"12", @"12.5", @"13", @"13.5", @"14", @"15", @"16", @"17", @"18"];
     
+    genderArray = @[@"Men", @"Women", @"Boys", @"Girls"];
     
     [self modifyTextfield:brandTxt withDropdownImage:YES];
     [self modifyTextfield:modelTxt withDropdownImage:NO];
     [self modifyTextfield:conditionTxt withDropdownImage:YES];
     [self modifyTextfield:sizeTxt withDropdownImage:YES];
     [self modifyTextfield:valueTxt withDropdownImage:NO];
+    [self modifyTextfield:genderTxt withDropdownImage:YES];
+    
+    
+    UILabel *paddingView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    paddingView.textAlignment = NSTextAlignmentCenter;
+    paddingView.text = @"$";
+    paddingView.textColor = [UIColor colorWithRed:219.0/255.0 green:70.0/255.0 blue:73.0/255.0 alpha:1.0];
+    valueTxt.leftView = paddingView;
+    valueTxt.leftViewMode = UITextFieldViewModeAlways;
+    
+    
     
     descriptionTxt.layer.cornerRadius = 5.0;
     addSneakerBtn.layer.cornerRadius = 5.0;
@@ -108,6 +126,7 @@
     conditionTxt.inputAccessoryView = keyboardToolbar;
     sizeTxt.inputAccessoryView = keyboardToolbar;
     valueTxt.inputAccessoryView = keyboardToolbar;
+    genderTxt.inputAccessoryView = keyboardToolbar;
     descriptionTxt.inputAccessoryView = keyboardToolbar;
     
     generalPickerView = [[UIPickerView alloc] init];
@@ -119,9 +138,12 @@
     //modelTxt.inputView = generalPickerView;
     conditionTxt.inputView = generalPickerView;
     sizeTxt.inputView = generalPickerView;
+    genderTxt.inputView = generalPickerView;
     
     descriptionTxt.text = WRITE_DESC_TEXT;
     descriptionTxt.textColor = [UIColor lightGrayColor];
+    
+    pageControl.numberOfPages = 0;
     
     
     [self loadBrandsFromWebserver];
@@ -183,6 +205,34 @@
     [self.menuContainerViewController toggleLeftSideMenuCompletion:nil];
 }
 
+#pragma mark Set add photo button to Navigationbar
+- (void)setAddPhotoButtonToNavigationBar
+{
+    UIImage *backButtonImage = [UIImage imageNamed:@"add_photo_btn"];
+    CGRect buttonFrame = CGRectMake(0, 0, 44, 44);
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = buttonFrame;
+    [button addTarget:self action:@selector(addPhotoBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [button setImage:backButtonImage forState:UIControlStateNormal];
+    
+    
+    UIBarButtonItem *addPhotoItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    
+    UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    negativeSpacer.width = -16;// it was -6 in iOS 6
+    
+    
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:negativeSpacer, addPhotoItem, nil]];
+    
+}
+
+-(IBAction)addPhotoBtnClicked:(id)sender
+{
+    [self performSegueWithIdentifier:@"AddSneakerVcToAddSneakerPhotoVc" sender:nil];
+}
+
 
 -(void)modifyTextfield:(UITextField *)txtField withDropdownImage:(BOOL)isDropDown
 {
@@ -219,7 +269,54 @@
 {
     NSLog(@"notification obj = %@",[notification object]);
     sneakerImageArray = [[NSArray alloc] initWithArray:[notification object]];
+    
+    if([sneakerImageArray count] > 0)
+    {
+        addPhotoBtn.hidden = YES;
+        pageControl.numberOfPages = [sneakerImageArray count];
+    }
+    else
+    {
+        addPhotoBtn.hidden = NO;
+        pageControl.numberOfPages = 0;
+    }
+    
     [sneakerImageCollectionView reloadData];
+}
+
+-(IBAction)clearBrandBtnClicked:(id)sender
+{
+    brandTxt.text = @"";
+}
+
+-(IBAction)clearModelBtnClicked:(id)sender
+{
+    modelTxt.text = @"";
+}
+
+-(IBAction)clearConditionBtnClicked:(id)sender
+{
+    conditionTxt.text = @"";
+}
+
+-(IBAction)clearSizeBtnClicked:(id)sender
+{
+    sizeTxt.text = @"";
+}
+
+-(IBAction)clearValueBtnClicked:(id)sender
+{
+    valueTxt.text = @"";
+}
+
+-(IBAction)clearGenderBtnClicked:(id)sender
+{
+    genderTxt.text = @"";
+}
+
+-(IBAction)clearDescriptionBtnClicked:(id)sender
+{
+    descriptionTxt.text = @"";
 }
 
 
@@ -287,6 +384,11 @@
     
 }
 
+-(void)addDesc:(NSString *)descStr viewController:(AddDescriptionViewController *)viewController
+{
+    descriptionTxt.text = descStr;
+}
+
 -(void)resetAllFields
 {
     sneakerImageArray = nil;
@@ -325,6 +427,10 @@
     else if([valueTxt.text length]==0)
     {
         [self.view makeToast:NSLocalizedString(@"enter_value_alert", nil)];
+    }
+    else if([genderTxt.text length]==0)
+    {
+        [self.view makeToast:NSLocalizedString(@"select_gender_alert", nil)];
     }
     else if([descriptionTxt.text length]==0 || [descriptionTxt.text isEqualToString:WRITE_DESC_TEXT])
     {
@@ -662,6 +768,16 @@
 }
 
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if(scrollView == sneakerImageCollectionView)
+    {
+        CGFloat pageWidth = sneakerImageCollectionView.frame.size.width;
+        pageControl.currentPage = sneakerImageCollectionView.contentOffset.x / pageWidth;
+    }
+}
+
+
 #pragma mark - Keyboard Notifications
 
 //Code from Brett Schumann
@@ -796,6 +912,22 @@
             [generalPickerView selectRow:index inComponent:0 animated:NO];
         }
     }
+    else if(textField==genderTxt)
+    {
+        commonArray = genderArray;
+        [generalPickerView reloadAllComponents];
+        
+        if([genderTxt.text length]==0)
+        {
+            [generalPickerView selectRow:0 inComponent:0 animated:NO];
+            genderTxt.text = [commonArray objectAtIndex:0];
+        }
+        else
+        {
+            NSInteger index = [commonArray indexOfObject:genderTxt.text];
+            [generalPickerView selectRow:index inComponent:0 animated:NO];
+        }
+    }
     
     
     /*if((textField.frame.origin.y-scroll.contentOffset.y)>100)
@@ -807,11 +939,23 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     textField.text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if(textField==valueTxt)
+    {
+        valueTxt.text = [NSString stringWithFormat:@"%.2f", [valueTxt.text floatValue]];
+    }
 }
 
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    if(textField==valueTxt)
+    {
+        if([textField.text rangeOfString:@"."].location != NSNotFound && [string isEqualToString:@"."])
+        {
+            return NO;
+        }
+    }
     return YES;
 }
 
@@ -827,6 +971,9 @@
         textView.text = @"";
         textView.textColor = [UIColor blackColor];
     }
+    
+    [textView resignFirstResponder];
+    [self performSegueWithIdentifier:@"AddSneakerVcToAddDescriptionVc" sender:nil];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
@@ -872,6 +1019,11 @@
     {
         AddSneakerPhotoViewController *addSneakerPhotoVc = (AddSneakerPhotoViewController *)segue.destinationViewController;
         addSneakerPhotoVc.selectedImageArray = [[NSMutableArray alloc] initWithArray:sneakerImageArray];
+    }
+    else if([segue.identifier isEqualToString:@"AddSneakerVcToAddDescriptionVc"])
+    {
+        AddDescriptionViewController *addDescVc = segue.destinationViewController;
+        addDescVc.delegate = self;
     }
 }
 

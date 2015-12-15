@@ -10,18 +10,7 @@
 
 @interface HomeViewController : UIViewController
 {
-    IBOutlet UIView *topTabView;
-    IBOutlet UIButton *forTradeTabBtn;
-    IBOutlet UIButton *forSaleTabBtn;
-    IBOutlet UIImageView *tabSelectionImage;
-    IBOutlet UICollectionView *sneakerCollectionView;
-    IBOutlet NSLayoutConstraint *selectionImageLeadingConstraint;
     IBOutlet UISearchBar *searchbar;
-    IBOutlet UILabel *noSneakerFoundLbl;
-    
-    NSMutableArray *sneakerArray;
-    NSMutableArray *sneakerForTradeArray;
-    NSMutableArray *sneakerForSaleArray;
 }
 
 @end

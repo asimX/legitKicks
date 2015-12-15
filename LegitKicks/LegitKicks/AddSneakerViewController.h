@@ -13,11 +13,14 @@
     IBOutlet UIScrollView *scroll;
     IBOutlet UICollectionView *sneakerImageCollectionView;
     IBOutlet UILabel *addPhotoLbl;
+    IBOutlet UIButton *addPhotoBtn;
+    IBOutlet UIPageControl *pageControl;
     IBOutlet UITextField *brandTxt;
     IBOutlet UITextField *modelTxt;
     IBOutlet UITextField *conditionTxt;
     IBOutlet UITextField *sizeTxt;
     IBOutlet UITextField *valueTxt;
+    IBOutlet UITextField *genderTxt;
     IBOutlet UITextView *descriptionTxt;
     IBOutlet UISegmentedControl *sneakerForSegmentControl;
     IBOutlet UIButton *addSneakerBtn;

@@ -10,7 +10,7 @@
 
 @interface AddSneakerPhotoViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
-    IBOutlet UITableView *imageTableView;
+    IBOutlet UICollectionView *imageCollectionView;
 }
 @property(nonatomic, retain)NSMutableArray *selectedImageArray;
 @end
